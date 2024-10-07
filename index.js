@@ -6,8 +6,13 @@
  */
 function createDictionary(entries) {
   // Створення порожнього словника
+  const dictionary = new Map();
   // Використання методу forEach для перебору масиву пар ключ-значення
-  // Додавання пари ключ-значення до словника за допомогою методу set
+  entries.forEach(([key, value]) => {
+    // Додавання пари ключ-значення до словника за допомогою методу set
+    dictionary.set(key, value);
+  });
+  return dictionary;
 }
 
 // Приклад використання функції createDictionary
@@ -37,9 +42,14 @@ console.log(
  * Повертає - Об'єкт, що містить ключі та значення з вхідного словника.
  */
 function convertMapToObject(map) {
+  let obj = {};
   // Перебираємо ключі та значення в словнику
-  // Додаємо ключ та значення до об'єкту
+  for (let [key, value] of map) {
+    // Додаємо ключ та значення до об'єкту
+    obj[key] = value;
+  }
   // Повертаємо отриманий об'єкт
+  return obj;
 }
 
 // Приклад використання функції convertMapToObject
@@ -63,8 +73,14 @@ console.log(convertMapToObject(someMap));
  */
 function setValue(dictionary, key, value) {
   // Перевірка, чи існує вже ключ у словнику
-  // Якщо ключ вже існує, встановлюємо для нього нове значення в верхньому регістрі
-  // Якщо ключ не існує, додаємо нову пару ключ-значення до словника де значення буде таким же як ключ
+  if (dictionary.has(key)) {
+    // Якщо ключ вже існує, встановлюємо для нього нове значення в верхньому регістрі
+    dictionary.set(key, value.toUpperCase());
+  } else {
+    // Якщо ключ не існує, додаємо нову пару ключ-значення до словника де значення буде таким же як ключ
+    dictionary.set(key, key);
+  }
+  return dictionary;
 }
 
 // Приклад використання функції setValue
@@ -98,8 +114,14 @@ console.log(
  */
 function deleteKey(dictionary, key) {
   // Перевірка, чи існує ключ у словнику
-  // Якщо ключ існує, видаляємо його та відповідне значення
-  // Якщо ключ не знайдено, повертаємо false
+  if (dictionary.has(key)) {
+    // Якщо ключ існує, видаляємо його та відповідне значення
+    dictionary.delete(key);
+    return true;
+  } else {
+    // Якщо ключ не знайдено, повертаємо false
+    return false;
+  }
 }
 
 // Приклад використання функції deleteKey
@@ -125,10 +147,17 @@ console.log(
  */
 function getKeysStartingWith(dictionary, letter) {
   // Оголошення порожнього масиву для збереження ключів
+  const keysStartingWithLetter = [];
   // Перебір ключів словника за допомогою циклу for...of
-  // Перевірка, чи ключ починається з заданої букви
-  // Якщо ключ починається з заданої букви, додаємо його до масиву
+  for (let key of dictionary.keys()) {
+    // Перевірка, чи ключ починається з заданої букви
+    if (key.startsWith(letter)) {
+      // Якщо ключ починається з заданої букви, додаємо його до масиву
+      keysStartingWithLetter.push(key);
+    }
+  }
   // Повертаємо масив
+  return keysStartingWithLetter;
 }
 
 // Приклад використання функції getKeysStartingWith
