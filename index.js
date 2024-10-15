@@ -6,8 +6,13 @@
  */
 function createDictionary(entries) {
   // Створення порожнього словника
+  const dictionary = new Map();
   // Використання методу forEach для перебору масиву пар ключ-значення
-  // Додавання пари ключ-значення до словника за допомогою методу set
+  entries.forEach(([key, value]) => {
+    // Додавання пари ключ-значення до словника за допомогою методу set
+    dictionary.set(key, value);
+  });
+  return dictionary;
 }
 
 // Приклад використання функції createDictionary
@@ -37,9 +42,14 @@ console.log(
  * Повертає - Об'єкт, що містить ключі та значення з вхідного словника.
  */
 function convertMapToObject(map) {
+  let obj = {};
   // Перебираємо ключі та значення в словнику
-  // Додаємо ключ та значення до об'єкту
+  for (let [key, value] of map) {
+    // Додаємо ключ та значення до об'єкту
+    obj[key] = value;
+  }
   // Повертаємо отриманий об'єкт
+  return obj;
 }
 
 // Приклад використання функції convertMapToObject
@@ -63,8 +73,14 @@ console.log(convertMapToObject(someMap));
  */
 function setValue(dictionary, key, value) {
   // Перевірка, чи існує вже ключ у словнику
-  // Якщо ключ вже існує, встановлюємо для нього нове значення в верхньому регістрі
-  // Якщо ключ не існує, додаємо нову пару ключ-значення до словника де значення буде таким же як ключ
+  if (dictionary.has(key)) {
+    // Якщо ключ вже існує, встановлюємо для нього нове значення в верхньому регістрі
+    dictionary.set(key, value.toUpperCase());
+  } else {
+    // Якщо ключ не існує, додаємо нову пару ключ-значення до словника де значення буде таким же як ключ
+    dictionary.set(key, key);
+  }
+  return dictionary;
 }
 
 // Приклад використання функції setValue
@@ -98,8 +114,14 @@ console.log(
  */
 function deleteKey(dictionary, key) {
   // Перевірка, чи існує ключ у словнику
-  // Якщо ключ існує, видаляємо його та відповідне значення
-  // Якщо ключ не знайдено, повертаємо false
+  if (dictionary.has(key)) {
+    // Якщо ключ існує, видаляємо його та відповідне значення
+    dictionary.delete(key);
+    return true;
+  } else {
+    // Якщо ключ не знайдено, повертаємо false
+    return false;
+  }
 }
 
 // Приклад використання функції deleteKey
@@ -125,10 +147,17 @@ console.log(
  */
 function getKeysStartingWith(dictionary, letter) {
   // Оголошення порожнього масиву для збереження ключів
+  const keysStartingWithLetter = [];
   // Перебір ключів словника за допомогою циклу for...of
-  // Перевірка, чи ключ починається з заданої букви
-  // Якщо ключ починається з заданої букви, додаємо його до масиву
+  for (let key of dictionary.keys()) {
+    // Перевірка, чи ключ починається з заданої букви
+    if (key.startsWith(letter)) {
+      // Якщо ключ починається з заданої букви, додаємо його до масиву
+      keysStartingWithLetter.push(key);
+    }
+  }
   // Повертаємо масив
+  return keysStartingWithLetter;
 }
 
 // Приклад використання функції getKeysStartingWith
@@ -158,11 +187,23 @@ console.log(
  */
 function addKeyValuePairs(dictionary, entries) {
   // Ведемо статистику доданих та відхилених ключів, для цього створемо змінні added та rejected з початковими значеннями 0
+  let added = 0;
+  let rejected = 0;
   // Використовуємо метод forEach для перебору масиву пар ключ-значення
-  // Перевіряємо, чи словник вже містить такий ключ за допомогою методу has
-  // Якщо ключ є унікальним, додаємо його до словника за допомогою методу set та збільшимо added на 1
-  // Якщо ключ не є унікальним, збільшимо rejected на 1
+  entries.forEach(([key, value]) => {
+    // Перевіряємо, чи словник вже містить такий ключ за допомогою методу has
+    if (dictionary.has(key)) {
+      // Якщо ключ не є унікальним, збільшимо rejected на 1
+      rejected++;
+    } else {
+      // Якщо ключ є унікальним, додаємо його до словника за допомогою методу set та збільшимо added на 1
+      dictionary.set(key, value);
+      added++;
+    }
+  });
+
   // Повертаємо об'єкт з dictionary, added, rejected
+  return { dictionary, added, rejected };
 }
 
 console.log("Завдання: 6 ==============================");
@@ -196,13 +237,29 @@ console.log(
  */
 function transformDictionary(dictionary) {
   // Створюємо порожні масиви для ключів (змінна keys), значень (змінна values) і пар ключ-значення (змінна entries)
+  let keys = [];
+  let values = [];
+  let entries = [];
   // Використовуємо цикл for...of і метод keys для перебору ключів словника
-  // Додаємо кожен ключ до масиву keys за допомогою методу push
+  for (let key of dictionary.keys()) {
+    // Додаємо кожен ключ до масиву keys за допомогою методу push
+    keys.push(key);
+  }
+
   // Використовуємо цикл for...of і метод values для перебору значень словника
-  // Додаємо кожне значення до масиву values за допомогою методу push
+  for (let value of dictionary.values()) {
+    // Додаємо кожне значення до масиву values за допомогою методу push
+    values.push(value);
+  }
+
   // Використовуємо цикл for...of і метод entries для перебору пар ключ-значення словника
-  // Додаємо кожну пару ключ-значення до масиву entries за допомогою методу push
+  for (let entry of dictionary.entries()) {
+    // Додаємо кожну пару ключ-значення до масиву entries за допомогою методу push
+    entries.push(entry);
+  }
+
   // Повертаємо об'єкт, який містить масиви ключів (властивість keys), значень (властивість values) і пар ключ-значення (властивість entries)
+  return { keys, values, entries };
 }
 
 console.log("Завдання: 7 ==============================");
@@ -235,9 +292,15 @@ console.log(
  */
 function checkPresence(dictionary, keys) {
   // Створюємо порожній масив для збереження результатів перевірки
+  const presence = [];
   // Використовуємо цикл forEach для перебору масиву ключів
-  // Додаємо результат перевірки (true або false) до масиву presence при наявності ключа у словнику
+  keys.forEach((key) => {
+    // Додаємо результат перевірки (true або false) до масиву presence при наявності ключа у словнику
+    presence.push(dictionary.has(key));
+  });
+
   // Повертаємо масив
+  return presence;
 }
 
 console.log("Завдання: 8 ==============================");
@@ -263,9 +326,16 @@ console.log(
  */
 function getFilteredDictionarySize(dictionary, filter) {
   // Створюємо новий Map об'єкт для зберігання елементів, що відповідають фільтру
+  let filteredSize = 0;
   // Використовуємо for...of цикл разом з методом entries() для перебору пар [ключ, значення] словника
-  // Якщо пара [ключ, значення] відповідає фільтру, додаємо її до фільтрованого словника
-  // Повертаємо розмір фільтрованого словника, використовуючи властивість size
+  for (let [key, value] of dictionary.entries()) {
+    // Якщо пара [ключ, значення] відповідає фільтру, додаємо її до фільтрованого словника
+    if (filter(key, value)) {
+      filteredSize++;
+    }
+  }
+  // Повертаємо розмір фільтрованого словникa
+  return filteredSize;
 }
 
 console.log("Завдання: 9 ==============================");
@@ -292,8 +362,11 @@ console.log(
  */
 function sortByValues(dictionary) {
   // Конвертуємо словник в масив пар ключ-значення за допомогою оператора деструктурізації
+  let entries = [...dictionary.entries()];
   // Сортуємо масив пар ключ-значення за значеннями в порядку спадання
+  entries.sort((a, b) => b[1] - a[1]);
   // Конвертуємо відсортований масив пар ключ-значення назад у словник
+  return new Map(entries);
 }
 
 console.log("Завдання: 10 ==============================");
@@ -326,8 +399,14 @@ console.log(
 function resetDictionary(dictionary, maxSize) {
   // Використовуємо метод size для перевірки кількості елементів у словнику
   // Якщо кількість елементів більша ніж максимально допустима, очищуємо словник за допомогою методу clear
-  // Повертаємо true, оскільки словник був очищений
+  if (dictionary.size > maxSize) {
+    dictionary.clear();
+    // Повертаємо true, оскільки словник був очищений
+    return true;
+  }
+
   // Повертаємо false, оскільки кількість елементів не перевищує максимально допустиму, тому словник не був очищений
+  return false;
 }
 
 console.log("Завдання: 11 ==============================");
@@ -357,10 +436,21 @@ console.log(
  * Повертає - Множину, яка містить ключі словника в модифікованому вигляді.
  */
 function convertDictionaryToSet(dictionary) {
+  let resultSet = new Set();
   // Перебираємо ключі словника
-  // Якщо ключ є рядком, переводимо його в верхній регістр і додаємо до множини
-  // Якщо ключ є числом, збільшуємо його на 1 і додаємо до множини
+  for (let key of dictionary.keys()) {
+    // Якщо ключ є рядком, переводимо його в верхній регістр і додаємо до множини
+    if (typeof key === "string") {
+      resultSet.add(key.toUpperCase());
+    }
+    // Якщо ключ є числом, збільшуємо його на 1 і додаємо до множини
+    else if (typeof key === "number") {
+      resultSet.add(key + 1);
+    }
+  }
+
   // Повертаємо отриману множину
+  return resultSet;
 }
 
 // Приклад використання функції convertDictionaryToSet
@@ -386,9 +476,14 @@ console.log(convertDictionaryToSet(mixedDictionary));
  * Повертає - Словник, який містить елементи множини як ключі та їх коди перших символів як значення.
  */
 function convertSetToDictionary(set) {
+  let resultDictionary = new Map();
   // Перебираємо елементи множини
-  // Додаємо елемент в словник з ключем, який дорівнює елементу, та значенням, яке дорівнює коду його першого символу
+  for (let item of set) {
+    // Додаємо елемент в словник з ключем, який дорівнює елементу, та значенням, яке дорівнює коду його першого символу
+    resultDictionary.set(item, item.charCodeAt(0));
+  }
   // Повертаємо отриманий словник
+  return resultDictionary;
 }
 
 // Приклад використання функції convertSetToDictionary
